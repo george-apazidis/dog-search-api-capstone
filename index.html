@@ -1,84 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
     <title>Dog Search</title>
-</head>
-<body>
+  </head>
+  <body>
     <script>
+      //AJAX call to Wikipedia API
+      function searchWiki(searchWord) {
+        var wikiParams = {
+          origin: "*",
+          action: "query",
+          format: "json",
+          prop: "extracts|pageimages",
+          indexpageids: 1,
+          redirects: 1,
+          exchars: 1200,
+          // explaintext: 1,
+          exsectionformat: "plain",
+          piprop: "name|thumbnail|original",
+          pithumbsize: 250
+        };
 
-        //AJAX call to Wikipedia API
-        function searchWiki(searchWord) {
-            var wikiParams = {
-                origin: '*',
-                action: 'query',
-                format: 'json',
-                prop: 'extracts|pageimages',
-                indexpageids: 1,
-                redirects: 1, 
-                exchars: 1200,
-                // explaintext: 1,
-                exsectionformat: 'plain',
-                piprop: 'name|thumbnail|original',
-                pithumbsize: 250
-            };
-
-            wikiParams.titles = searchWord;
-            url = 'https://en.wikipedia.org/w/api.php';
+        wikiParams.titles = searchWord;
+        url = "https://en.wikipedia.org/w/api.php";
+        $.getJSON(url, wikiParams, function(data) {
+          if (data.query.pageids[0] === "-1") {
+            wikiParams.titles = searchWord.replace(/\b\w/g, function(l) {
+              return l.toUpperCase();
+            });
             $.getJSON(url, wikiParams, function(data) {
-                if (data.query.pageids[0] === "-1") {
-                    wikiParams.titles = searchWord.replace(/\b\w/g, function(l) { return l.toUpperCase() });
-                    $.getJSON(url, wikiParams, function(data) {
-                        if (data.query.pageids[0] === "-1") {
-                            wikiParams.titles = searchWord.toUpperCase();
-                            $.getJSON(url, wikiParams, function(data) {
-                                showWiki(data.query);
-                            });
-                        } else { showWiki(data.query); }
-                    });
-                } else { showWiki(data.query); }
+              if (data.query.pageids[0] === "-1") {
+                wikiParams.titles = searchWord.toUpperCase();
+                $.getJSON(url, wikiParams, function(data) {
+                  showWiki(data.query);
+                });
+              } else {
+                showWiki(data.query);
+              }
             });
-        }
+          } else {
+            showWiki(data.query);
+          }
+        });
+      }
 
+      //AJAX call to YouTube API
+      function searchYoutube(searchWord) {
+        var params = {
+          part: "snippet",
+          key: "AIzaSyA2b7kNQ0eZHeAFJYwxI6-8xJo755yPkX0",
+          q: "What is a" + searchWord + "dog",
+          maxResults: 8,
+          type: "video",
+          order: "Relevance",
+          safeSearch: "strict",
+          relevanceLanguage: "en"
+        };
 
-        //AJAX call to YouTube API
-        function searchYoutube(searchWord) {
-            var params = {
-                part:'snippet',
-                key:'AIzaSyA2b7kNQ0eZHeAFJYwxI6-8xJo755yPkX0',
-                q: 'What is a' + searchWord + 'dog',
-                maxResults: 8,
-                type: 'video',
-                order: 'Relevance',
-                safeSearch: 'strict',
-                relevanceLanguage: 'en'
-            };
+        url = "https://www.googleapis.com/youtube/v3/search";
+        $.getJSON(url, params, function(data) {
+          showYoutube(searchWord, data.items);
+        });
+      }
 
-            url = 'https://www.googleapis.com/youtube/v3/search';
-            $.getJSON(url, params, function(data) {
-                showYoutube(searchWord, data.items);
-            });
-        }
+      // Display Wikipedia data
+      function showWiki(results) {
+        console.log(results);
+      }
 
-        // Display Wikipedia data
-        function showWiki(results) {
-            console.log(results);
-        }
-
-        // Display YouTube data
-        function showYoutube(searchWord, results) {
-            console.log(results);
-        }
-
-
-
-
-
-
-
+      // Display YouTube data
+      function showYoutube(searchWord, results) {
+        console.log(results);
+      }
     </script>
-</body>
+  </body>
 </html>
