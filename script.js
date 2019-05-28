@@ -47,7 +47,35 @@ function searchWiki(searchWord) {
     "bullterrier - staffordshire": "Staffordshire Bull Terrier",
     chow: "chow chow",
     clumber: "Clumber Spaniel",
-    cotondetulear: "Coton de Tulear"
+    cotondetulear: "Coton de Tulear",
+    "terrier - westhighland": "West Highland White Terrier",
+    "terrier - toy": "English Toy Terrier",
+    "terrier - russell": "Russell_Terrier",
+    "terrier - kerryblue": "Kerry Blue Terrier",
+    "terrier - dandie": "Dandie Dinmont Terrier",
+    "terrier - american": "American Staffordshire Terrier",
+    stbernard: "St. Bernard (dog)",
+    "spaniel - irish": "Irish Water Spaniel",
+    "spaniel - blenheim": "King Charles Spaniel",
+    "sheepdog - english": "Old English Sheepdog",
+    "retriever - curly": "Curly-coated Retriever",
+    "retriever - chesapeake": "Chesapeake Bay Retriever",
+    redbone: "Redbone Coonhound",
+    pyrenees: "Great Pyrenees",
+    "pointer - germanlonghair": "German Longhaired Pointer",
+    "pointer - german": "German Shorthaired Pointer",
+    pembroke: "Pembroke Welsh Corgi",
+    "mountain - swiss": "Swiss mountain dog",
+    "mountain - bernese": "Bernese Mountain Dog",
+    mix: "Mongrel",
+    mexicanhairless: "Mexican Hairless Dog",
+    lhasa: "Lhasa Apso",
+    leonberg: "Leonberger",
+    kelpie: "Australian Kelpie",
+    "hound - walker": "Treeing Walker Coonhound",
+    "hound - english": "English Foxhound",
+    germanshepherd: "German Shepherd",
+    eskimo: "American Eskimo Dog"
   };
 
   // if the dog bree is in the override object
@@ -121,16 +149,19 @@ function searchYoutube(searchWord) {
 
 // Display Wikipedia data
 function showWiki(results, breedName) {
-  console.log(results);
-
   const pageID = results.pageids[0];
-  const dogImgURL = results.pages[pageID].original.source;
   const dogBlurb = results.pages[pageID].extract;
 
   $("#wiki").html("");
-  $("#wiki").append(
-    `<img class="dog-image" src='${dogImgURL}' alt='${breedName}'>`
-  );
+
+  // if images exist
+  if ("thumbnail" in results.pages[pageID]) {
+    const dogImgURL = results.pages[pageID].thumbnail.source;
+    $("#wiki").append(
+      `<img class="dog-image" src='${dogImgURL}' alt='${breedName}'>`
+    );
+  }
+
   $("#wiki").append(dogBlurb);
   $("#wiki").append(
     `<a href='https://en.wikipedia.org/?curid=${pageID}' target='blank'>link to wiki page</a>`
@@ -164,9 +195,6 @@ function populateBreedMenu(results) {
       breedList.push(key);
     }
   });
-
-  // insert breeds to pull-down menu
-  console.log(breedList);
 
   // insert all breed names into pull-down menu
   $.each(breedList, function(i, breedName) {
