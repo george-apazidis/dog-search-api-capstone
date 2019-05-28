@@ -40,11 +40,11 @@ function getWiki(searchWord) {
   };
 
   wikiParams.titles = cleanName;
-  console.log("cleanName = ", cleanName);
+  // console.log("cleanName = ", cleanName);
 
   let url = "https://en.wikipedia.org/w/api.php";
   $.getJSON(url, wikiParams, function(data) {
-    console.log("first call: ", wikiParams.titles);
+    // console.log("first call: ", wikiParams.titles);
 
     // if no results
     if (data.query.pageids[0] === "-1") {
@@ -53,7 +53,7 @@ function getWiki(searchWord) {
 
       // call API again with 'terreir'
       $.getJSON(url, wikiParams, function(data) {
-        console.log("2nd call: ", wikiParams.titles);
+        // console.log("2nd call: ", wikiParams.titles);
 
         // if no results
         if (data.query.pageids[0] === "-1") {
@@ -62,7 +62,7 @@ function getWiki(searchWord) {
 
           // call API again with just the breed name
           $.getJSON(url, wikiParams, function(data) {
-            console.log("3rd call: ", wikiParams.titles);
+            // console.log("3rd call: ", wikiParams.titles);
             showWiki(data.query, searchWord);
           });
         } else {
@@ -77,7 +77,7 @@ function getWiki(searchWord) {
 
 // AJAX call to YouTube API
 // convert to FETCH API
-function searchYoutube(searchWord) {
+function getYoutube(searchWord) {
   var params = {
     part: "snippet",
     key: "AIzaSyA2b7kNQ0eZHeAFJYwxI6-8xJo755yPkX0",
@@ -89,9 +89,9 @@ function searchYoutube(searchWord) {
     relevanceLanguage: "en"
   };
 
-  url = "https://www.googleapis.com/youtube/v3/search";
+  let url = "https://www.googleapis.com/youtube/v3/search";
   $.getJSON(url, params, function(data) {
-    showYoutube(searchWord, data.items);
+    showYoutube(data.items);
   });
 }
 
@@ -117,15 +117,50 @@ function showWiki(results, breedName) {
 }
 
 // Display YouTube data
-function showYoutube(searchWord, results) {
+function showYoutube(results) {
   console.log(results);
+  $("#youTube").html("");
+
+  let thumbURL = "";
+  let vidURL = "";
+  let title = "";
+  let descrip = "";
+  let date = "";
+  let channelTitle = "";
+
+  for (let i = 0; i < results.length; i++) {
+    thumbURL = results[i].snippet.thumbnails.medium.url;
+    vidURL = `https://www.youtube.com/watch?v=${results[i].id.videoId}`;
+    title = results[i].snippet.title;
+    descrip = results[i].snippet.description;
+    date = results[i].snippet.publishedAt
+      .substring(0, results[i].snippet.publishedAt.length - 14)
+      .replace(/-/g, "/");
+    channelTitle = results[i].snippet.channelTitle;
+    // show image TN
+    $("#youTube").append(
+      `<a href='${vidURL}' target="_blank"><img class='yt-tn' src='${thumbURL}'></a>`
+    );
+
+    // show title
+    $("#youTube").append(`<h3>${title}</h3>`);
+
+    // show description
+    $("#youTube").append(`<p>${descrip}</p>`);
+
+    // show date
+    $("#youTube").append(`<p>${date}</p>`);
+
+    // show channel title
+    $("#youTube").append(`<p>${channelTitle}</p>`);
+  }
 }
 
 // Display dog breeds in menu
 function populateBreedMenu(results) {
   let breedList = [];
   let subBreed = "";
-  console.log(results);
+  // console.log(results);
 
   // loop through results object for each breed
   Object.keys(results.message).forEach(function(key) {
@@ -157,20 +192,23 @@ function populateBreedMenu(results) {
 // Display dog images
 function showDogImages(results) {
   $("#dogApi-images").html("");
-  console.log("inside dogimages --- ", results);
+  // console.log("inside dogimages --- ", results);
 
-  // itterate through all sub-breeds
-  for (let i = 0; i < results.message.length; i++) {
-    $("#dogApi-images").append(
-      `<img class='dog-img' alt='' src='${results.message[i]}'>`
-    );
+  // itterate array of images
+  // MARIUS - is this the best way to handle errors? trying to catch if the case of 'Select a Breed' is submitted
+  if (results.status == "success") {
+    for (let i = 0; i < results.message.length; i++) {
+      $("#dogApi-images").append(
+        `<img class='dog-img' alt='${cleanName}' src='${results.message[i]}'>`
+      );
+    }
+  } else {
+    $("#dogApi-images").append("Could not load images");
   }
-
-  console.log(results);
 }
 
 function getCleanName(searchWord) {
-  console.log(searchWord);
+  // console.log(searchWord);
 
   // create object to match dog breeds manually
   const dogNameOverride = {
@@ -233,11 +271,18 @@ function getCleanName(searchWord) {
 function watchForm() {
   $("form").submit(event => {
     event.preventDefault();
-    let searchWord = $("#breed-list option:selected").text();
-    cleanName = getCleanName(searchWord);
-    getWiki(cleanName);
-    //getBreedImages(cleanName);
-    // searchYoutube();
+    // MARIUS - should I combine the below 2 or 3 lines?
+
+    let searchValue = $("#breed-list option:selected").val();
+
+    if (searchValue != "") {
+      cleanName = getCleanName(searchValue);
+      getWiki(cleanName);
+      getBreedImages(searchValue);
+      getYoutube(cleanName);
+    } else {
+      alert("Please choose a breed");
+    }
   });
 }
 

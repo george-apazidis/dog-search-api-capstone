@@ -3,6 +3,17 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+section {
+  background-color: #dddddd;
+  padding: 20px;
+  margin: 20px;
+}
+
+#submit,
+#breed-list {
+  font-size: 25px;
+}
+
 .dog-image {
   width: 50%;
   max-width: 200px;
@@ -14,6 +25,6 @@
   max-height: 120px;
 }
 
-section {
-  background-color: #dddddd;
+.yt-tn {
+  width: 300px;
 }
