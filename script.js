@@ -24,7 +24,6 @@ function getBreedImages() {
 }
 
 // AJAX call to Wikipedia API
-// convert to FETCH API
 function searchWiki(searchWord) {
   var wikiParams = {
     origin: "*",
@@ -40,25 +39,62 @@ function searchWiki(searchWord) {
     pithumbsize: 250
   };
 
-  wikiParams.titles = searchWord;
-  url = "https://en.wikipedia.org/w/api.php";
+  // create object to match dog breeds manually
+  const dogNameOverride = {
+    appenzeller: "Appenzeller Sennenhund",
+    bouvier: "Bouvier des Flandres",
+    brabancon: "Brabancon Griffon",
+    "bullterrier - staffordshire": "Staffordshire Bull Terrier",
+    chow: "chow chow",
+    clumber: "Clumber Spaniel",
+    cotondetulear: "Coton de Tulear"
+  };
+
+  // if the dog bree is in the override object
+  if (dogNameOverride.hasOwnProperty(searchWord)) {
+    wikiParams.titles = dogNameOverride[searchWord];
+  }
+  // if dog is a sub-breed
+  else if (searchWord.includes("-")) {
+    // put sub-breed before breed
+    searchWord = searchWord
+      .replace(" - ", " ") // replace hyphen with space
+      .split(" ") // create array with each word as item
+      .reverse() // reverse order of array
+      .join(" "); // join each item of array into a string with a space between each word
+    wikiParams.titles = searchWord;
+  } else {
+    wikiParams.titles = searchWord + " dog";
+  }
+
+  let url = "https://en.wikipedia.org/w/api.php";
   $.getJSON(url, wikiParams, function(data) {
+    console.log("first call: ", wikiParams.titles);
+
+    // if no results
     if (data.query.pageids[0] === "-1") {
-      wikiParams.titles = searchWord.replace(/\b\w/g, function(l) {
-        return l.toUpperCase();
-      });
+      // replace 'dog' with 'terrier'
+      wikiParams.titles = searchWord + " terrier";
+
+      // call API again with 'terreir'
       $.getJSON(url, wikiParams, function(data) {
+        console.log("2nd call: ", wikiParams.titles);
+
+        // if no results
         if (data.query.pageids[0] === "-1") {
-          wikiParams.titles = searchWord.toUpperCase();
+          wikiParams.titles = searchWord;
+
+          // call API again with just the breed name
           $.getJSON(url, wikiParams, function(data) {
-            showWiki(data.query);
+            console.log("3rd call: ", wikiParams.titles);
+            showWiki(data.query, searchWord);
           });
         } else {
-          showWiki(data.query);
+          showWiki(data.query, searchWord);
         }
       });
     } else {
-      showWiki(data.query);
+      showWiki(data.query, searchWord);
     }
   });
 }
@@ -84,8 +120,21 @@ function searchYoutube(searchWord) {
 }
 
 // Display Wikipedia data
-function showWiki(results) {
+function showWiki(results, breedName) {
   console.log(results);
+
+  const pageID = results.pageids[0];
+  const dogImgURL = results.pages[pageID].original.source;
+  const dogBlurb = results.pages[pageID].extract;
+
+  $("#wiki").html("");
+  $("#wiki").append(
+    `<img class="dog-image" src='${dogImgURL}' alt='${breedName}'>`
+  );
+  $("#wiki").append(dogBlurb);
+  $("#wiki").append(
+    `<a href='https://en.wikipedia.org/?curid=${pageID}' target='blank'>link to wiki page</a>`
+  );
 }
 
 // Display YouTube data
@@ -95,12 +144,11 @@ function showYoutube(searchWord, results) {
 
 // Display dog breeds in menu
 function populateBreedMenu(results) {
-  console.log(results);
-
   let breedList = [];
   let subBreed = "";
+  console.log(results);
 
-  // loop through results object
+  // loop through results object for each breed
   Object.keys(results.message).forEach(function(key) {
     // if breed contains sub-breed
     if (results.message[key].length >= 1) {
@@ -116,9 +164,18 @@ function populateBreedMenu(results) {
       breedList.push(key);
     }
   });
+
+  // insert breeds to pull-down menu
   console.log(breedList);
 
   // insert all breed names into pull-down menu
+  $.each(breedList, function(i, breedName) {
+    $("#breed-list").append(
+      $("<option></option>")
+        .val(breedName)
+        .html(breedName)
+    );
+  });
 }
 
 // Display dog images
@@ -126,4 +183,19 @@ function showDogImages(results) {
   console.log(results);
 }
 
-getAllBreeds();
+// Event listener for submit btn
+function watchForm() {
+  $("form").submit(event => {
+    event.preventDefault();
+    let searchWord = $("#breed-list option:selected").text();
+    searchWiki(searchWord);
+    // searchYoutube();
+    // getBreedImages();
+  });
+}
+
+// on load
+$(function() {
+  watchForm();
+  getAllBreeds();
+});
