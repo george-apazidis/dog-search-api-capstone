@@ -1,6 +1,6 @@
 "use strict";
 
-let currentBreed = "dalmatian";
+let cleanName = "";
 
 // AJAX call to dog API - All Breeds
 function getAllBreeds() {
@@ -11,7 +11,7 @@ function getAllBreeds() {
 }
 
 // AJAX call to dog API - Breed images
-function getBreedImages() {
+function getBreedImages(currentBreed) {
   // if "-" exists in currentBreed, so reconstruct currentBreed var
   currentBreed = currentBreed.includes("-")
     ? currentBreed.replace(" - ", "/")
@@ -24,7 +24,7 @@ function getBreedImages() {
 }
 
 // AJAX call to Wikipedia API
-function searchWiki(searchWord) {
+function getWiki(searchWord) {
   var wikiParams = {
     origin: "*",
     action: "query",
@@ -32,68 +32,15 @@ function searchWiki(searchWord) {
     prop: "extracts|pageimages",
     indexpageids: 1,
     redirects: 1,
-    exchars: 1200,
+    exchars: 500,
     // explaintext: 1,
     exsectionformat: "plain",
     piprop: "name|thumbnail|original",
     pithumbsize: 250
   };
 
-  // create object to match dog breeds manually
-  const dogNameOverride = {
-    appenzeller: "Appenzeller Sennenhund",
-    bouvier: "Bouvier des Flandres",
-    brabancon: "Brabancon Griffon",
-    "bullterrier - staffordshire": "Staffordshire Bull Terrier",
-    chow: "chow chow",
-    clumber: "Clumber Spaniel",
-    cotondetulear: "Coton de Tulear",
-    "terrier - westhighland": "West Highland White Terrier",
-    "terrier - toy": "English Toy Terrier",
-    "terrier - russell": "Russell_Terrier",
-    "terrier - kerryblue": "Kerry Blue Terrier",
-    "terrier - dandie": "Dandie Dinmont Terrier",
-    "terrier - american": "American Staffordshire Terrier",
-    stbernard: "St. Bernard (dog)",
-    "spaniel - irish": "Irish Water Spaniel",
-    "spaniel - blenheim": "King Charles Spaniel",
-    "sheepdog - english": "Old English Sheepdog",
-    "retriever - curly": "Curly-coated Retriever",
-    "retriever - chesapeake": "Chesapeake Bay Retriever",
-    redbone: "Redbone Coonhound",
-    pyrenees: "Great Pyrenees",
-    "pointer - germanlonghair": "German Longhaired Pointer",
-    "pointer - german": "German Shorthaired Pointer",
-    pembroke: "Pembroke Welsh Corgi",
-    "mountain - swiss": "Swiss mountain dog",
-    "mountain - bernese": "Bernese Mountain Dog",
-    mix: "Mongrel",
-    mexicanhairless: "Mexican Hairless Dog",
-    lhasa: "Lhasa Apso",
-    leonberg: "Leonberger",
-    kelpie: "Australian Kelpie",
-    "hound - walker": "Treeing Walker Coonhound",
-    "hound - english": "English Foxhound",
-    germanshepherd: "German Shepherd",
-    eskimo: "American Eskimo Dog"
-  };
-
-  // if the dog bree is in the override object
-  if (dogNameOverride.hasOwnProperty(searchWord)) {
-    wikiParams.titles = dogNameOverride[searchWord];
-  }
-  // if dog is a sub-breed
-  else if (searchWord.includes("-")) {
-    // put sub-breed before breed
-    searchWord = searchWord
-      .replace(" - ", " ") // replace hyphen with space
-      .split(" ") // create array with each word as item
-      .reverse() // reverse order of array
-      .join(" "); // join each item of array into a string with a space between each word
-    wikiParams.titles = searchWord;
-  } else {
-    wikiParams.titles = searchWord + " dog";
-  }
+  wikiParams.titles = cleanName;
+  console.log("cleanName = ", cleanName);
 
   let url = "https://en.wikipedia.org/w/api.php";
   $.getJSON(url, wikiParams, function(data) {
@@ -102,7 +49,7 @@ function searchWiki(searchWord) {
     // if no results
     if (data.query.pageids[0] === "-1") {
       // replace 'dog' with 'terrier'
-      wikiParams.titles = searchWord + " terrier";
+      wikiParams.titles = cleanName.replace("dog", "terrier");
 
       // call API again with 'terreir'
       $.getJSON(url, wikiParams, function(data) {
@@ -110,7 +57,8 @@ function searchWiki(searchWord) {
 
         // if no results
         if (data.query.pageids[0] === "-1") {
-          wikiParams.titles = searchWord;
+          // title param = no 'dog' or 'terrier' words
+          wikiParams.titles = cleanName.replace(" dog", "");
 
           // call API again with just the breed name
           $.getJSON(url, wikiParams, function(data) {
@@ -208,7 +156,77 @@ function populateBreedMenu(results) {
 
 // Display dog images
 function showDogImages(results) {
+  $("#dogApi-images").html("");
+  console.log("inside dogimages --- ", results);
+
+  // itterate through all sub-breeds
+  for (let i = 0; i < results.message.length; i++) {
+    $("#dogApi-images").append(
+      `<img class='dog-img' alt='' src='${results.message[i]}'>`
+    );
+  }
+
   console.log(results);
+}
+
+function getCleanName(searchWord) {
+  console.log(searchWord);
+
+  // create object to match dog breeds manually
+  const dogNameOverride = {
+    appenzeller: "Appenzeller Sennenhund",
+    bouvier: "Bouvier des Flandres",
+    brabancon: "Brabancon Griffon",
+    "bullterrier - staffordshire": "Staffordshire Bull Terrier",
+    chow: "chow chow",
+    clumber: "Clumber Spaniel",
+    cotondetulear: "Coton de Tulear",
+    "terrier - westhighland": "West Highland White Terrier",
+    "terrier - toy": "English Toy Terrier",
+    "terrier - russell": "Russell_Terrier",
+    "terrier - kerryblue": "Kerry Blue Terrier",
+    "terrier - dandie": "Dandie Dinmont Terrier",
+    "terrier - american": "American Staffordshire Terrier",
+    stbernard: "St. Bernard (dog)",
+    "spaniel - irish": "Irish Water Spaniel",
+    "spaniel - blenheim": "King Charles Spaniel",
+    "sheepdog - english": "Old English Sheepdog",
+    "retriever - curly": "Curly-coated Retriever",
+    "retriever - chesapeake": "Chesapeake Bay Retriever",
+    redbone: "Redbone Coonhound",
+    pyrenees: "Great Pyrenees",
+    "pointer - germanlonghair": "German Longhaired Pointer",
+    "pointer - german": "German Shorthaired Pointer",
+    pembroke: "Pembroke Welsh Corgi",
+    "mountain - swiss": "Swiss mountain dog",
+    "mountain - bernese": "Bernese Mountain Dog",
+    mix: "Mongrel",
+    mexicanhairless: "Mexican Hairless Dog",
+    lhasa: "Lhasa Apso",
+    leonberg: "Leonberger",
+    kelpie: "Australian Kelpie",
+    "hound - walker": "Treeing Walker Coonhound",
+    "hound - english": "English Foxhound",
+    germanshepherd: "German Shepherd",
+    eskimo: "American Eskimo Dog"
+  };
+
+  // if the dog bree is in the override object
+  if (dogNameOverride.hasOwnProperty(searchWord)) {
+    return dogNameOverride[searchWord];
+  }
+  // if dog is a sub-breed
+  else if (searchWord.includes("-")) {
+    // put sub-breed before breed
+    searchWord = searchWord
+      .replace(" - ", " ") // replace hyphen with space
+      .split(" ") // create array with each word as item
+      .reverse() // reverse order of array
+      .join(" "); // join each item of array into a string with a space between each word
+    return searchWord;
+  } else {
+    return searchWord + " dog";
+  }
 }
 
 // Event listener for submit btn
@@ -216,9 +234,10 @@ function watchForm() {
   $("form").submit(event => {
     event.preventDefault();
     let searchWord = $("#breed-list option:selected").text();
-    searchWiki(searchWord);
+    cleanName = getCleanName(searchWord);
+    getWiki(cleanName);
+    //getBreedImages(cleanName);
     // searchYoutube();
-    // getBreedImages();
   });
 }
 

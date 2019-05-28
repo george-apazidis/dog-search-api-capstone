@@ -9,6 +9,11 @@
   display: inline-block;
 }
 
+.dog-img {
+  max-width: 150px;
+  max-height: 120px;
+}
+
 section {
   background-color: #dddddd;
 }
