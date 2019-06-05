@@ -4,31 +4,67 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    />
     <link rel="stylesheet" href="style.css" />
-    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+      integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
+      crossorigin="anonymous"
+    />
     <title>Dog Search</title>
   </head>
   <body>
-    <form>
-      <select id="breed-list">
-        <option disabled value="" selected>Select a Breed</option>
-      </select>
-      <input type="submit" value="Get Breed information!" id="submit" />
-    </form>
+    <header>
+      <div class="container">
+        <h1>D<i class="fas fa-paw"></i>G Search</h1>
+        <p>Find information about dog breeds all in one place!</p>
+        <form>
+          <select id="breed-list">
+            <option disabled value="" selected>Select a Breed</option>
+          </select>
+          <input type="submit" value="Find!" id="submit" />
+        </form>
+      </div>
+    </header>
 
-    <section>
-      <h2>Description</h2>
-      <div id="wiki">data</div>
-    </section>
-    <section>
-      <h2>Images</h2>
-      <div id="dogApi-images">data</div>
-    </section>
-    <section>
-      <h2>Videos</h2>
-      <div id="youTube">data</div>
-    </section>
+    <main class="main">
+      <section class="sticky-form">
+        <form>
+          <select id="breed-list-sticky">
+            <option disabled value="" selected>Select a Breed</option>
+          </select>
+          <input type="submit" value="Find!" id="submit-sticky" />
+        </form>
+      </section>
+      <div class="parent">
+        <div class="container-left">
+          <section>
+            <h2>Description</h2>
+            <div id="wiki">data</div>
+          </section>
+          <section>
+            <h2>Images</h2>
+            <div id="dogApi-images">data</div>
+          </section>
+        </div>
+        <div class="container-right">
+          <section>
+            <h2>Videos</h2>
+            <div id="youTube">data</div>
+          </section>
+        </div>
+      </div>
+    </main>
 
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
     <script src="script.js"></script>
   </body>
 </html>

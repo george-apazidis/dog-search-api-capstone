@@ -32,7 +32,7 @@ function getWiki(searchWord) {
     prop: "extracts|pageimages",
     indexpageids: 1,
     redirects: 1,
-    exchars: 500,
+    exchars: 600,
     // explaintext: 1,
     exsectionformat: "plain",
     piprop: "name|thumbnail|original",
@@ -98,7 +98,28 @@ function getYoutube(searchWord) {
 // Display Wikipedia data
 function showWiki(results, breedName) {
   const pageID = results.pageids[0];
-  const dogBlurb = results.pages[pageID].extract;
+  let dogBlurb = results.pages[pageID].extract;
+
+  // MARIUS --
+  // if dogBlurb ends with '...'
+
+  if (dogBlurb.endsWith("...")) {
+    // get index of '<'
+    let lastClosingTag = dogBlurb.lastIndexOf("<");
+
+    // remove '...' from end
+    dogBlurb = dogBlurb.slice(0, -3);
+
+    // insert '...' before lastClosingTag
+    dogBlurb = [
+      dogBlurb.slice(0, lastClosingTag),
+      "...",
+      dogBlurb.slice(lastClosingTag)
+    ].join("");
+  }
+
+  //dogBlurb = dogBlurb.slice(-3);
+  //console.log(dogBlurb);
 
   $("#wiki").html("");
 
@@ -112,7 +133,7 @@ function showWiki(results, breedName) {
 
   $("#wiki").append(dogBlurb);
   $("#wiki").append(
-    `<a href='https://en.wikipedia.org/?curid=${pageID}' target='blank'>link to wiki page</a>`
+    `<hr><a href='https://en.wikipedia.org/?curid=${pageID}' target='blank'>link to wiki page</a>`
   );
 }
 
@@ -137,22 +158,20 @@ function showYoutube(results) {
       .substring(0, results[i].snippet.publishedAt.length - 14)
       .replace(/-/g, "/");
     channelTitle = results[i].snippet.channelTitle;
+
     // show image TN
     $("#youTube").append(
       `<a href='${vidURL}' target="_blank"><img class='yt-tn' src='${thumbURL}'></a>`
     );
 
     // show title
-    $("#youTube").append(`<h3>${title}</h3>`);
+    $("#youTube").append(`<div class='yt-text'><h3>${title}</h3>`);
+
+    // show date and channel title
+    $("#youTube").append(`<p class="yt-meta">${date} - ${channelTitle}</p>`);
 
     // show description
-    $("#youTube").append(`<p>${descrip}</p>`);
-
-    // show date
-    $("#youTube").append(`<p>${date}</p>`);
-
-    // show channel title
-    $("#youTube").append(`<p>${channelTitle}</p>`);
+    $("#youTube").append(`<p class="yt-description">${descrip}</p></div>`);
   }
 }
 
@@ -181,7 +200,7 @@ function populateBreedMenu(results) {
 
   // insert all breed names into pull-down menu
   $.each(breedList, function(i, breedName) {
-    $("#breed-list").append(
+    $("#breed-list , #breed-list-sticky").append(
       $("<option></option>")
         .val(breedName)
         .html(breedName)
@@ -195,11 +214,12 @@ function showDogImages(results) {
   // console.log("inside dogimages --- ", results);
 
   // itterate array of images
-  // MARIUS - is this the best way to handle errors? trying to catch if the case of 'Select a Breed' is submitted
   if (results.status == "success") {
     for (let i = 0; i < results.message.length; i++) {
       $("#dogApi-images").append(
-        `<img class='dog-img' alt='${cleanName}' src='${results.message[i]}'>`
+        `<div class="dog-img" style="background-image:url('${
+          results.message[i]
+        }')"></div>`
       );
     }
   } else {
@@ -271,7 +291,6 @@ function getCleanName(searchWord) {
 function watchForm() {
   $("form").submit(event => {
     event.preventDefault();
-    // MARIUS - should I combine the below 2 or 3 lines?
 
     let searchValue = $("#breed-list option:selected").val();
 
@@ -280,10 +299,32 @@ function watchForm() {
       getWiki(cleanName);
       getBreedImages(searchValue);
       getYoutube(cleanName);
+      scrollToContent();
     } else {
       alert("Please choose a breed");
     }
   });
+}
+
+// on pull-down menu changes
+$("#breed-list, #breed-list-sticky").on("change", function() {
+  let searchValue = $(this).val();
+
+  // clear selected on both menus
+  $("#breed-list option, #breed-list-sticky option").attr("selected", false);
+
+  // assign 'selected' to searchValue to both menus
+  $(`#breed-list-sticky option[value='${searchValue}'], 
+     #breed-list option[value='${searchValue}']`).attr("selected", true);
+});
+
+function scrollToContent() {
+  $("html, body").animate(
+    {
+      scrollTop: $(".main").offset().top
+    },
+    900
+  );
 }
 
 // on load
