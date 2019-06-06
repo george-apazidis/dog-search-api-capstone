@@ -45,7 +45,7 @@ section {
   background-color: rgba(254, 234, 207, 0.9);
   padding: 20px;
   padding-bottom: 0px;
-  margin: 0px 0px 10px 0px;
+  margin: 0px 0px 14px 0px;
   border-radius: 5px;
   position: relative;
 }
@@ -126,13 +126,21 @@ hr {
 .sticky-form {
   position: sticky;
   top: 0;
-  padding: 14px;
+  padding: 12px;
   font-size: 15px;
   z-index: 99;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
 .sticky-form:after {
   background-image: none;
+}
+
+.sticky-form h2 {
+  display: none;
 }
 
 .dog-image {
@@ -172,7 +180,7 @@ hr {
   padding: 14px; /* for larger touch area for mobile */
 }
 
-.fas {
+.ext_link .fas {
   margin-right: 6px;
 }
 
@@ -210,7 +218,7 @@ hr {
   font-size: 16px;
   margin: 0px 0px 50px 0px;
 }
-/* screen sizes 330px and Up */
+/* screen sizes 350px and Up */
 @media (min-width: 350px) {
   .container {
     padding: 24px;
@@ -224,12 +232,24 @@ hr {
 
 /* screen sizes 500px and Up */
 @media (min-width: 500px) {
+  .main {
+    padding: 15px;
+  }
+
+  section {
+    margin-bottom: 15px;
+  }
+
   h1 {
     font-size: 60px;
   }
 
   .container {
     padding: 28px;
+  }
+
+  .sticky-form {
+    font-size: 18px;
   }
 
   .dog-img {
@@ -239,9 +259,22 @@ hr {
 
   /* aligns last dog image to the left when at 3 columns */
   #dogApi-images:after {
-    content: '';
+    content: "";
     flex-basis: 32%;
     width: 32%;
+  }
+}
+
+@media (min-width: 600px) {
+  .sticky-form {
+    justify-content: space-between;
+  }
+
+  .sticky-form h2 {
+    display: block;
+    margin: 0;
+    display: inline-block;
+  }
 }
 
 @media (min-width: 768px) {
@@ -252,12 +285,14 @@ hr {
   section {
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
   }
+
   .btn {
     padding: 1rem 3rem;
   }
 
   .sticky-form {
     margin-bottom: 20px;
+    font-size: 20px;
   }
 
   .parent {
@@ -268,13 +303,16 @@ hr {
     flex: 1;
   }
 
-  .container-left section {
+  .container-left {
     margin-right: 10px;
-    margin-bottom: 20px;
   }
 
-  .container-right section {
+  .container-right {
     margin-left: 10px;
+  }
+
+  .container-left section {
+    margin-bottom: 20px;
   }
 
   .dog-img {
@@ -288,11 +326,31 @@ hr {
 }
 
 @media (min-width: 1000px) {
+  .main {
+    padding: 24px;
+  }
+
   section {
     padding: 24px;
     padding-bottom: 0px;
   }
 
+  .sticky-form {
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .container-left section {
+    margin-bottom: 24px;
+  }
+
+  .container-left {
+    margin-right: 12px;
+  }
+
+  .container-right {
+    margin-left: 12px;
+  }
   .dog-image {
     margin-right: 18px;
   }
