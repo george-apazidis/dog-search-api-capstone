@@ -133,7 +133,7 @@ function showWiki(results, breedName) {
 
   $("#wiki").append(dogBlurb);
   $("#wiki").append(
-    `<hr><a href='https://en.wikipedia.org/?curid=${pageID}' target='blank'>link to wiki page</a>`
+    `<hr><p class="ext_link"><a href='https://en.wikipedia.org/?curid=${pageID}' target='blank'><i class="fas fa-external-link-square-alt"></i>more on Wikipedia</a></p>`
   );
 }
 
