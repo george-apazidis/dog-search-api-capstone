@@ -63,8 +63,12 @@ section::after {
   background-size: 30%;
 }
 
+.container-right section {
+  padding-bottom: 30px;
+}
+
 p {
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.4;
 }
 
@@ -84,20 +88,37 @@ select {
 }
 
 .main {
+  display: none;
   padding: 10px;
-  max-width: 1100px;
+  max-width: 1300px;
   margin-left: auto;
   margin-right: auto;
 }
 
-form {
+header form {
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
 }
 
 #submit,
 #breed-list {
-  font-size: 20px;
+  font-size: 16px;
   margin: 10px 0px;
   height: 30px;
+}
+
+#submit {
+  margin-left: 2px;
+}
+
+.dashed {
+  border: 1px dashed red;
+}
+
+.error {
+  display: none;
+  color: red;
 }
 
 .container {
@@ -106,14 +127,14 @@ form {
   justify-content: center;
   flex-direction: column;
   background-color: rgb(255, 255, 255, 0.8);
-  border-radius: 1em;
-  padding: 20px;
-  margin: 20px;
+  padding: 24px 10px;
+  margin: 0px;
   box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.5);
 }
 
 header p {
   font-size: 20px;
+  padding: 0 14px;
 }
 
 hr {
@@ -139,8 +160,21 @@ hr {
   background-image: none;
 }
 
+.sticky-form form {
+  display: flex;
+  align-items: center;
+}
+
 .sticky-form h2 {
   display: none;
+}
+#breed-list-sticky {
+  margin-right: 4px;
+}
+
+#breed-list-sticky,
+.sticky-form input {
+  height: 28px;
 }
 
 .dog-image {
@@ -151,8 +185,9 @@ hr {
 }
 
 #wiki h2 {
+  display: inline-block;
   clear: left;
-  margin: 20px 0px 10px 0px;
+  margin: 0;
   font-size: 22px;
 }
 
@@ -200,28 +235,51 @@ hr {
   border: 3px solid rgb(238, 238, 238);
 }
 
+a:hover .yt-tn {
+  border-color: rgb(71, 116, 33);
+  transition: all 0.2s linear;
+}
+
 #youTube h3 {
   margin: 4px 0px;
   font-weight: 400;
   font-size: 18px;
-  border-bottom: 1px solid rgb(221, 221, 221);
-  padding: 12px 0;
+  padding: 6px 0 4px 0;
 }
 
 .yt-meta {
-  font-size: 14px;
-  color: #888;
-  margin: 8px 0px;
+  color: rgb(136, 136, 136);
+  margin: 0 0 14px 0;
+  font-size: 12px;
 }
 
 .yt-description {
-  font-size: 16px;
-  margin: 0px 0px 50px 0px;
+  margin: 0;
+  font-size: 14px;
 }
+
+#youTube hr {
+  margin: 30px 0;
+}
+
+#youTube hr:last-child {
+  display: none;
+}
+
+p.yt-error {
+  color: rgb(255, 0, 0);
+  font-weight: bold;
+}
+
 /* screen sizes 350px and Up */
 @media (min-width: 350px) {
+  p {
+    font-size: 16px;
+  }
   .container {
-    padding: 24px;
+    padding: 24px 10px;
+    border-radius: 1em;
+    margin: 10px;
   }
 
   .sticky-form {
@@ -235,7 +293,10 @@ hr {
   .main {
     padding: 15px;
   }
-
+  #submit,
+  #breed-list {
+    height: 33px;
+  }
   section {
     margin-bottom: 15px;
   }
@@ -246,6 +307,16 @@ hr {
 
   .container {
     padding: 28px;
+    margin: 24px;
+  }
+
+  #submit,
+  #breed-list {
+    font-size: 20px;
+  }
+
+  #submit {
+    margin-left: 4px;
   }
 
   .sticky-form {
@@ -263,6 +334,26 @@ hr {
     flex-basis: 32%;
     width: 32%;
   }
+
+  .YT-wrap {
+    display: flex;
+  }
+
+  .YT-vid {
+    flex: 1 0 40%;
+    margin-right: 16px;
+  }
+
+  .YT-meta {
+    flex: 1 0 55%;
+    overflow: hidden;
+  }
+
+  #youTube h3 {
+    margin-top: 0;
+    padding: 0;
+    font-size: 16px;
+  }
 }
 
 @media (min-width: 600px) {
@@ -275,9 +366,17 @@ hr {
     margin: 0;
     display: inline-block;
   }
+
+  #youTube h3 {
+    font-size: 18px;
+  }
 }
 
 @media (min-width: 768px) {
+  p {
+    font-size: 14px;
+  }
+
   .main {
     padding: 20px;
   }
@@ -293,6 +392,11 @@ hr {
   .sticky-form {
     margin-bottom: 20px;
     font-size: 20px;
+  }
+
+  #breed-list-sticky,
+  .sticky-form input {
+    height: 34px;
   }
 
   .parent {
@@ -316,12 +420,18 @@ hr {
   }
 
   .dog-img {
-    width: 48.5%;
+    width: 47.5%;
     height: 110px;
+    margin-bottom: 16px;
   }
 
-  .yt-tn {
-    width: 48%;
+  .YT-wrap {
+    display: block;
+  }
+
+  #youTube h3 {
+    font-size: 16px;
+    padding-top: 6px;
   }
 }
 
@@ -356,11 +466,29 @@ hr {
   }
 
   .dog-img {
-    width: 32%;
+    width: 31%;
     height: 100px;
+    margin-bottom: 16px;
   }
 
   .ext_link a {
     padding: 18px;
+  }
+
+  .YT-wrap {
+    display: flex;
+  }
+
+  #youTube h3 {
+    font-size: 17px;
+    padding-top: 0px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .dog-img {
+    width: 31%;
+    height: 120px;
+    margin-bottom: 18px;
   }
 }

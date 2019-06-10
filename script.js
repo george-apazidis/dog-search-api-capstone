@@ -80,19 +80,45 @@ function getWiki(searchWord) {
 function getYoutube(searchWord) {
   var params = {
     part: "snippet",
-    key: "AIzaSyA2b7kNQ0eZHeAFJYwxI6-8xJo755yPkX0",
-    q: "What is a" + searchWord + "dog",
-    maxResults: 8,
+    // key: "AIzaSyBavHY4immKob8rbkZfn3V0Wqejhwpauxc",
+    key: "AIzaSyAzrW8qlKjU1kXdfy6PHI23-3jfdpfKBdU", //  *** change key
+    q: "What is a " + searchWord,
+    maxResults: 6,
     type: "video",
     order: "Relevance",
     safeSearch: "strict",
     relevanceLanguage: "en"
   };
 
-  let url = "https://www.googleapis.com/youtube/v3/search";
-  $.getJSON(url, params, function(data) {
-    showYoutube(data.items);
-  });
+  console.log(`q = -${params.q}-`);
+
+  let searchURL = "https://www.googleapis.com/youtube/v3/search";
+
+  // $.fetch(url, params, function(data) {
+  //   showYoutube(data.items);
+  // });
+
+  const queryString = formatQueryParams(params);
+  const url = searchURL + "?" + queryString;
+
+  fetch(url)
+    .then(response => response.json())
+    .then(responseJson => showYoutube(responseJson.items))
+    .catch(error => showYouTubeErr(error));
+}
+
+function showYouTubeErr(err) {
+  $("#youTube").empty();
+  $("#youTube").html(
+    `<p class="yt-error">Woof! Something went wrong.</p><br><p>${err}</p>`
+  );
+}
+
+function formatQueryParams(params) {
+  const queryItems = Object.keys(params).map(
+    key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
+  );
+  return queryItems.join("&");
 }
 
 // Display Wikipedia data
@@ -139,39 +165,49 @@ function showWiki(results, breedName) {
 
 // Display YouTube data
 function showYoutube(results) {
-  console.log(results);
-  $("#youTube").html("");
+  console.log("YT results = ", results);
 
-  let thumbURL = "";
-  let vidURL = "";
-  let title = "";
-  let descrip = "";
-  let date = "";
-  let channelTitle = "";
+  if (results.length > 0) {
+    $("#youTube").html("");
 
-  for (let i = 0; i < results.length; i++) {
-    thumbURL = results[i].snippet.thumbnails.medium.url;
-    vidURL = `https://www.youtube.com/watch?v=${results[i].id.videoId}`;
-    title = results[i].snippet.title;
-    descrip = results[i].snippet.description;
-    date = results[i].snippet.publishedAt
-      .substring(0, results[i].snippet.publishedAt.length - 14)
-      .replace(/-/g, "/");
-    channelTitle = results[i].snippet.channelTitle;
+    let thumbURL = "";
+    let vidURL = "";
+    let title = "";
+    let descrip = "";
+    let date = "";
+    let channelTitle = "";
 
-    // show image TN
-    $("#youTube").append(
-      `<a href='${vidURL}' target="_blank"><img class='yt-tn' src='${thumbURL}'></a>`
-    );
+    for (let i = 0; i < results.length; i++) {
+      thumbURL = results[i].snippet.thumbnails.medium.url;
+      vidURL = `https://www.youtube.com/watch?v=${results[i].id.videoId}`;
+      title = results[i].snippet.title;
+      descrip = results[i].snippet.description;
+      date = results[i].snippet.publishedAt
+        .substring(0, results[i].snippet.publishedAt.length - 14)
+        .replace(/-/g, "/");
+      channelTitle = results[i].snippet.channelTitle;
 
-    // show title
-    $("#youTube").append(`<div class='yt-text'><h3>${title}</h3>`);
-
-    // show date and channel title
-    $("#youTube").append(`<p class="yt-meta">${date} - ${channelTitle}</p>`);
-
-    // show description
-    $("#youTube").append(`<p class="yt-description">${descrip}</p></div>`);
+      // show image TN
+      $("#youTube").append(
+        `<div class="YT-wrap">
+            <div class="YT-vid">
+              <a href='${vidURL}' target="_blank"><img class='yt-tn' src='${thumbURL}'></a>
+            </div>
+            <div class='YT-meta'>
+              <div class='yt-text'>
+                <h3><a href='${vidURL}' target="_blank">${title}</a></h3>
+                <p class="yt-meta">${date} - ${channelTitle}</p>
+                <p class="yt-description">${descrip}</p>
+              </div>
+            </div>
+          </div>
+          <hr>`
+      );
+    }
+  } else {
+    $("#youTube")
+      .empty()
+      .append(`<p class="yt-description">No Results found</p></div>`);
   }
 }
 
@@ -295,13 +331,23 @@ function watchForm() {
     let searchValue = $("#breed-list option:selected").val();
 
     if (searchValue != "") {
+      $(".error").hide();
+      $(".main").show();
       cleanName = getCleanName(searchValue);
       getWiki(cleanName);
       getBreedImages(searchValue);
       getYoutube(cleanName);
       scrollToContent();
     } else {
-      alert("Please choose a breed");
+      $(".error").show();
+      $("#breed-list")
+        .addClass("dashed")
+        .effect("highlight", { color: "red" }, 700)
+        .dequeue()
+        .effect("shake", { times: 3, distance: 5 }, 700);
+
+      // $("#breed-list").effect("shake", { times: 3 }, 600);
+      // $("#breed-list").effect("highlight", { color: "red" }, 1500);
     }
   });
 }
@@ -309,6 +355,9 @@ function watchForm() {
 // on pull-down menu changes
 $("#breed-list, #breed-list-sticky").on("change", function() {
   let searchValue = $(this).val();
+
+  $("#breed-list").removeClass("dashed");
+  $(".error").hide();
 
   // clear selected on both menus
   $("#breed-list option, #breed-list-sticky option").attr("selected", false);
