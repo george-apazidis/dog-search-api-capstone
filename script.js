@@ -76,12 +76,10 @@ function getWiki(searchWord) {
 }
 
 // AJAX call to YouTube API
-// convert to FETCH API
 function getYoutube(searchWord) {
   var params = {
     part: "snippet",
     key: "AIzaSyBavHY4immKob8rbkZfn3V0Wqejhwpauxc",
-    // key: "AIzaSyAzrW8qlKjU1kXdfy6PHI23-3jfdpfKBdU", //  *** change key
     q: "What is a " + searchWord,
     maxResults: 6,
     type: "video",
@@ -89,9 +87,6 @@ function getYoutube(searchWord) {
     safeSearch: "strict",
     relevanceLanguage: "en"
   };
-
-  // console.log(`q = ${params.q}`);
-  // console.log(`cleanName = ${cleanName}`);
 
   let searchURL = "https://www.googleapis.com/youtube/v3/search";
 
@@ -266,8 +261,6 @@ function showDogImages(results) {
 }
 
 function getCleanName(searchWord) {
-  // console.log(searchWord);
-
   // create object to match dog breeds manually
   const dogNameOverride = {
     appenzeller: "Appenzeller Sennenhund",
@@ -307,10 +300,11 @@ function getCleanName(searchWord) {
     eskimo: "American Eskimo Dog"
   };
 
-  // if the dog bree is in the override object
+  // if the dog breed is in the override object
   if (dogNameOverride.hasOwnProperty(searchWord)) {
     return dogNameOverride[searchWord];
   }
+
   // if dog is a sub-breed
   else if (searchWord.includes("-")) {
     // put sub-breed before breed
