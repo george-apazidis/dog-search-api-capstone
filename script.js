@@ -13,11 +13,11 @@ function getAllBreeds() {
 // AJAX call to dog API - Breed images
 function getBreedImages(currentBreed) {
   // if "-" exists in currentBreed, so reconstruct currentBreed var
-  currentBreed = currentBreed.includes("-")
-    ? currentBreed.replace(" - ", "/")
-    : currentBreed;
+  currentBreed = currentBreed.includes("-") ?
+    currentBreed.replace(" - ", "/") :
+    currentBreed;
 
-  fetch(`https://dog.ceo/api/breed/${currentBreed}/images/random/20`)
+  fetch(`https://dog.ceo/api/breed/${currentBreed}/images/random/18`)
     .then(response => response.json())
     .then(responseJson => showDogImages(responseJson))
     .catch(error => alert("Something went wrong. Try again later."));
@@ -32,7 +32,7 @@ function getWiki(searchWord) {
     prop: "extracts|pageimages",
     indexpageids: 1,
     redirects: 1,
-    exchars: 600,
+    exchars: 1100,
     // explaintext: 1,
     exsectionformat: "plain",
     piprop: "name|thumbnail|original",
@@ -43,7 +43,7 @@ function getWiki(searchWord) {
   // console.log("cleanName = ", cleanName);
 
   let url = "https://en.wikipedia.org/w/api.php";
-  $.getJSON(url, wikiParams, function(data) {
+  $.getJSON(url, wikiParams, function (data) {
     // console.log("first call: ", wikiParams.titles);
 
     // if no results
@@ -52,7 +52,7 @@ function getWiki(searchWord) {
       wikiParams.titles = cleanName.replace("dog", "terrier");
 
       // call API again with 'terreir'
-      $.getJSON(url, wikiParams, function(data) {
+      $.getJSON(url, wikiParams, function (data) {
         // console.log("2nd call: ", wikiParams.titles);
 
         // if no results
@@ -61,7 +61,7 @@ function getWiki(searchWord) {
           wikiParams.titles = cleanName.replace(" dog", "");
 
           // call API again with just the breed name
-          $.getJSON(url, wikiParams, function(data) {
+          $.getJSON(url, wikiParams, function (data) {
             // console.log("3rd call: ", wikiParams.titles);
             showWiki(data.query, searchWord);
           });
@@ -80,8 +80,8 @@ function getWiki(searchWord) {
 function getYoutube(searchWord) {
   var params = {
     part: "snippet",
-    // key: "AIzaSyBavHY4immKob8rbkZfn3V0Wqejhwpauxc",
-    key: "AIzaSyAzrW8qlKjU1kXdfy6PHI23-3jfdpfKBdU", //  *** change key
+    key: "AIzaSyBavHY4immKob8rbkZfn3V0Wqejhwpauxc",
+    // key: "AIzaSyAzrW8qlKjU1kXdfy6PHI23-3jfdpfKBdU", //  *** change key
     q: "What is a " + searchWord,
     maxResults: 6,
     type: "video",
@@ -90,13 +90,10 @@ function getYoutube(searchWord) {
     relevanceLanguage: "en"
   };
 
-  console.log(`q = -${params.q}-`);
+  // console.log(`q = ${params.q}`);
+  // console.log(`cleanName = ${cleanName}`);
 
   let searchURL = "https://www.googleapis.com/youtube/v3/search";
-
-  // $.fetch(url, params, function(data) {
-  //   showYoutube(data.items);
-  // });
 
   const queryString = formatQueryParams(params);
   const url = searchURL + "?" + queryString;
@@ -161,11 +158,13 @@ function showWiki(results, breedName) {
   $("#wiki").append(
     `<hr><p class="ext_link"><a href='https://en.wikipedia.org/?curid=${pageID}' target='blank'><i class="fas fa-external-link-square-alt"></i>more on Wikipedia</a></p>`
   );
+  // hide Wikipedia h2 of "Description" since we are already using it.
+  $("h2:has(#Description)").hide();
 }
 
 // Display YouTube data
 function showYoutube(results) {
-  console.log("YT results = ", results);
+  // console.log("YT results = ", results);
 
   if (results.length > 0) {
     $("#youTube").html("");
@@ -195,7 +194,7 @@ function showYoutube(results) {
             </div>
             <div class='YT-meta'>
               <div class='yt-text'>
-                <h3><a href='${vidURL}' target="_blank">${title}</a></h3>
+                <h3><a href='${vidURL}' target="_blank"><i class="fas fa-external-link-square-alt"></i>${title}</a></h3>
                 <p class="yt-meta">${date} - ${channelTitle}</p>
                 <p class="yt-description">${descrip}</p>
               </div>
@@ -204,6 +203,9 @@ function showYoutube(results) {
           <hr>`
       );
     }
+    $("#youTube").append(
+      `<p class="ext_link"><a href='https://www.youtube.com/results?search_query=What+is+a+${cleanName}' target='blank'><i class="fas fa-external-link-square-alt"></i>more on YouTube</a></p>`
+    );
   } else {
     $("#youTube")
       .empty()
@@ -218,7 +220,7 @@ function populateBreedMenu(results) {
   // console.log(results);
 
   // loop through results object for each breed
-  Object.keys(results.message).forEach(function(key) {
+  Object.keys(results.message).forEach(function (key) {
     // if breed contains sub-breed
     if (results.message[key].length >= 1) {
       // itterate through all sub-breeds
@@ -235,11 +237,11 @@ function populateBreedMenu(results) {
   });
 
   // insert all breed names into pull-down menu
-  $.each(breedList, function(i, breedName) {
+  $.each(breedList, function (i, breedName) {
     $("#breed-list , #breed-list-sticky").append(
       $("<option></option>")
-        .val(breedName)
-        .html(breedName)
+      .val(breedName)
+      .html(breedName)
     );
   });
 }
@@ -255,7 +257,7 @@ function showDogImages(results) {
       $("#dogApi-images").append(
         `<div class="dog-img" style="background-image:url('${
           results.message[i]
-        }')"></div>`
+        }'), url('images/ajax-loading.gif')"></div>`
       );
     }
   } else {
@@ -294,7 +296,7 @@ function getCleanName(searchWord) {
     pembroke: "Pembroke Welsh Corgi",
     "mountain - swiss": "Swiss mountain dog",
     "mountain - bernese": "Bernese Mountain Dog",
-    mix: "Mongrel",
+    mix: "Mongrel dog",
     mexicanhairless: "Mexican Hairless Dog",
     lhasa: "Lhasa Apso",
     leonberg: "Leonberger",
@@ -333,6 +335,7 @@ function watchForm() {
     if (searchValue != "") {
       $(".error").hide();
       $(".main").show();
+      $("footer").css("display", "flex");
       cleanName = getCleanName(searchValue);
       getWiki(cleanName);
       getBreedImages(searchValue);
@@ -342,18 +345,20 @@ function watchForm() {
       $(".error").show();
       $("#breed-list")
         .addClass("dashed")
-        .effect("highlight", { color: "red" }, 700)
+        .effect("highlight", {
+          color: "red"
+        }, 700)
         .dequeue()
-        .effect("shake", { times: 3, distance: 5 }, 700);
-
-      // $("#breed-list").effect("shake", { times: 3 }, 600);
-      // $("#breed-list").effect("highlight", { color: "red" }, 1500);
+        .effect("shake", {
+          times: 3,
+          distance: 5
+        }, 700);
     }
   });
 }
 
 // on pull-down menu changes
-$("#breed-list, #breed-list-sticky").on("change", function() {
+$("#breed-list, #breed-list-sticky").on("change", function () {
   let searchValue = $(this).val();
 
   $("#breed-list").removeClass("dashed");
@@ -368,8 +373,7 @@ $("#breed-list, #breed-list-sticky").on("change", function() {
 });
 
 function scrollToContent() {
-  $("html, body").animate(
-    {
+  $("html, body").animate({
       scrollTop: $(".main").offset().top
     },
     900
@@ -377,7 +381,7 @@ function scrollToContent() {
 }
 
 // on load
-$(function() {
+$(function () {
   watchForm();
   getAllBreeds();
 });

@@ -63,13 +63,11 @@ section::after {
   background-size: 30%;
 }
 
-.container-right section {
-  padding-bottom: 30px;
-}
-
 p {
   font-size: 14px;
   line-height: 1.4;
+  margin: 0;
+  padding: 0 0 10px 0;
 }
 
 a {
@@ -135,6 +133,7 @@ header form {
 header p {
   font-size: 20px;
   padding: 0 14px;
+  margin: 20px 0;
 }
 
 hr {
@@ -168,6 +167,7 @@ hr {
 .sticky-form h2 {
   display: none;
 }
+
 #breed-list-sticky {
   margin-right: 4px;
 }
@@ -175,6 +175,10 @@ hr {
 #breed-list-sticky,
 .sticky-form input {
   height: 28px;
+}
+
+.parent section {
+  min-height: 350px;
 }
 
 .dog-image {
@@ -187,12 +191,23 @@ hr {
 #wiki h2 {
   display: inline-block;
   clear: left;
-  margin: 0;
   font-size: 22px;
 }
 
+#wiki h2,
+#wiki h3 {
+  margin: 0;
+  padding: 10px 0;
+  font-weight: 400;
+}
+
 #wiki #Description {
-  display: none; /* For wiki feeds that include an h2 as 'Description' */
+  display: none;
+  /* For wiki feeds that include an h2 as 'Description' */
+}
+
+p.mw-empty-elt {
+  display: inline;
 }
 
 #dogApi-images {
@@ -208,11 +223,13 @@ hr {
   font-size: 14px;
   color: #b5754d;
   margin: 0;
+  padding: 0;
 }
 
 .ext_link a {
   display: inline-block;
-  padding: 14px; /* for larger touch area for mobile */
+  padding: 14px;
+  /* for larger touch area for mobile */
 }
 
 .ext_link .fas {
@@ -251,19 +268,26 @@ a:hover .yt-tn {
   color: rgb(136, 136, 136);
   margin: 0 0 14px 0;
   font-size: 12px;
+  padding: 0;
 }
 
 .yt-description {
   margin: 0;
+  padding: 0;
   font-size: 14px;
+}
+
+.yt-text i.fas.fa-external-link-square-alt {
+  margin-right: 5px;
+  font-size: 16px;
 }
 
 #youTube hr {
   margin: 30px 0;
 }
 
-#youTube hr:last-child {
-  display: none;
+#youTube hr:last-of-type {
+  margin-bottom: 0;
 }
 
 p.yt-error {
@@ -271,11 +295,25 @@ p.yt-error {
   font-weight: bold;
 }
 
+footer {
+  display: none;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(254, 234, 207, 0.9);
+  padding: 10px 0;
+}
+
+footer span {
+  padding: 0 10px;
+}
+
 /* screen sizes 350px and Up */
 @media (min-width: 350px) {
   p {
     font-size: 16px;
   }
+
   .container {
     padding: 24px 10px;
     border-radius: 1em;
@@ -293,10 +331,12 @@ p.yt-error {
   .main {
     padding: 15px;
   }
+
   #submit,
   #breed-list {
     height: 33px;
   }
+
   section {
     margin-bottom: 15px;
   }
@@ -403,7 +443,7 @@ p.yt-error {
     display: flex;
   }
 
-  .parent > div {
+  .parent>div {
     flex: 1;
   }
 
@@ -436,6 +476,10 @@ p.yt-error {
 }
 
 @media (min-width: 1000px) {
+  p {
+    font-size: 16px;
+  }
+
   .main {
     padding: 24px;
   }
@@ -461,6 +505,7 @@ p.yt-error {
   .container-right {
     margin-left: 12px;
   }
+
   .dog-image {
     margin-right: 18px;
   }
