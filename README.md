@@ -1,7 +1,5 @@
 # Dog Search #
 
-Live link: https://george-apazidis.github.io/dog-search-api-capstone/
-
 ## Summary ##
 
 "Dog Search" is a web app that displays dog breed information. A one-click search on "Dog Search" displays the following information on the same page:
@@ -16,6 +14,17 @@ The advantage of this app over a regular search engine is that all information i
 
 ## Technology ##
 
-HTML - CSS - JavaScript - jQuery
+* HTML
+* CSS
+* JavaScript
+* jQuery
 
 "Dog Search" uses AJAX calls to request and load data asynchronously from public APIs in response to user click events detected by event-handlers. Using jQuery DOM taversal and manipulation, the data is displayed in an organized layout that has been made responsive and mobile-first by CSS media-queries, allowing the page to be usable and equally optimized on devices with small and large screens alike.
+
+## Demo ##
+
+* [Live Demo](https://george-apazidis.github.io/dog-search-api-capstone/)
+
+## Authors ##
+
+* George Apazidis - Front-End development/testing, styling
