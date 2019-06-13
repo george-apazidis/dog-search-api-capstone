@@ -94,7 +94,7 @@ select {
 }
 
 header form {
-  padding: 0 10px;
+  padding: 0 6px;
   display: flex;
   align-items: center;
 }
@@ -302,10 +302,46 @@ footer {
   justify-content: center;
   background-color: rgba(254, 234, 207, 0.9);
   padding: 10px 0;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5)
 }
 
 footer span {
   padding: 0 10px;
+}
+
+.contact-icons {
+  display: block;
+  font-size: 30px;
+  color: rgb(181, 117, 77);
+  margin-bottom: 6px;
+}
+
+.contact-icons a {
+  padding: 6px;
+}
+
+.contact-icons a:hover {
+  text-decoration: none;
+}
+
+.copyright {
+  font-size: 14px;
+}
+
+
+footer::after {
+  content: "";
+  background: url(images/paw3.png);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+  opacity: 0.4;
+  background-size: 17%;
 }
 
 /* screen sizes 350px and Up */
