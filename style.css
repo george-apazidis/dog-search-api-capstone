@@ -144,6 +144,10 @@ hr {
 }
 
 .sticky-form {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -o-sticky;
+  position: -ms-sticky;
   position: sticky;
   top: 0;
   padding: 12px;
