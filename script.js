@@ -118,9 +118,7 @@ function showWiki(results, breedName) {
   const pageID = results.pageids[0];
   let dogBlurb = results.pages[pageID].extract;
 
-  // MARIUS --
   // if dogBlurb ends with '...'
-
   if (dogBlurb.endsWith("...")) {
     // get index of '<'
     let lastClosingTag = dogBlurb.lastIndexOf("<");
