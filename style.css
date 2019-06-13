@@ -181,6 +181,13 @@ hr {
   height: 28px;
 }
 
+/* button styles for consistency on mobile */
+.sticky-form input,
+#submit {
+  border-radius: 3px;
+  border: 1px solid rgb(169, 169, 169);
+}
+
 .parent section {
   min-height: 350px;
 }
