@@ -17,17 +17,17 @@ The advantage of this app over a regular search engine is that all information i
 ## User Stories & Wireframe ##
 * As a new user, I want to understand what the app is and decide whether to use it.
 * As a new user, I would like to search for different dog breeds to find descriptions, pictures and videos of that breed.
-![wireframe](https://github.com/george-apazidis/dog-search-api-capstone/blob/master/images/wireframe.jpg "wireframe")
+![wireframe](/images/wireframe.jpg "wireframe")
 
 ## User Flow ##
-![wireframe](https://github.com/george-apazidis/dog-search-api-capstone/blob/master/images/user-flow.jpg "wireframe")
+![wireframe](/images/user-flow.jpg "wireframe")
 
 ## Screenshots ##
 Landing page:
-![landing page](https://github.com/george-apazidis/dog-search-api-capstone/blob/master/landing-page.png "landing page")
+![landing page](landing-page.png "landing page")
 
 Results page (results for "Beagle" search):
-![results page](https://github.com/george-apazidis/dog-search-api-capstone/blob/master/results-page.png "results page")
+![results page](results-page.png "results page")
 
 
 ## Technology ##
