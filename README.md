@@ -15,8 +15,8 @@ The advantage of this app over a regular search engine is that all information i
 ## Wireframe ##
 ![wireframe](https://github.com/george-apazidis/dog-search-api-capstone/blob/master/images/wireframe.jpg "wireframe")
 
-## User Stories ##
-![wireframe](https://github.com/george-apazidis/dog-search-api-capstone/blob/master/images/user-story.jpg "wireframe")
+## User Flow ##
+![wireframe](https://github.com/george-apazidis/dog-search-api-capstone/blob/master/images/user-flow.jpg "wireframe")
 
 ## Screenshots ##
 Landing page:
