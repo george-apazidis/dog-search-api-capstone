@@ -186,6 +186,8 @@ hr {
 #submit {
   border-radius: 3px;
   border: 1px solid rgb(169, 169, 169);
+  cursor: pointer;
+  background-color: #DDDDDD;
 }
 
 .parent section {
