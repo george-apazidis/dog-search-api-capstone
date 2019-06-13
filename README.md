@@ -12,6 +12,12 @@
 
 The advantage of this app over a regular search engine is that all information is actually drawn out of these different sources and displayed on the app page itself, saving the user from having to search a dog breed on an engine, scroll to and click on the images, Wikipedia or YouTube page, wait for the new page to load, and find relevant information on the new page. "Dog Search" organizes the data on a single page and makes descriptions, images, and YouTube clips accessible in one place.
 
+## Wireframe ##
+![wireframe](https://github.com/george-apazidis/dog-search-api-capstone/blob/master/images/wireframe.jpg "wireframe")
+
+## User Stories ##
+![wireframe](https://github.com/george-apazidis/dog-search-api-capstone/blob/master/images/user-story.jpg "wireframe")
+
 ## Screenshots ##
 Landing page:
 ![landing page](https://github.com/george-apazidis/dog-search-api-capstone/blob/master/landing-page.png "landing page")
