@@ -93,6 +93,10 @@ input {
   cursor: pointer;
 }
 
+input {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
 .main {
   display: none;
   padding: 10px;
